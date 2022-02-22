@@ -17,7 +17,7 @@ ARG AIRFLOW_USER_HOME=/usr/local/airflow
 ARG AIRFLOW_DEPS=""
 ARG PYTHON_DEPS=""
 ENV AIRFLOW_HOME=${AIRFLOW_USER_HOME}
-
+ENV GUNICORN_CMD_ARGS --log-level WARNING
 # Define en_US.
 ENV LANGUAGE en_US.UTF-8
 ENV LANG en_US.UTF-8
@@ -83,9 +83,10 @@ EXPOSE 8080 5555 8793
 RUN set -ex \
     && pip install scipy \
     && pip install great_expectations \
-    && pip install dbt \
-    && pip uninstall -y SQLAlchemy \
-    && pip install SQLAlchemy==1.3.15
+    && pip install dbt==0.19.1 \
+    && pip uninstall -y SQLAlchemy
+RUN pip install SQLAlchemy==1.3.23
+RUN pip install Flask-SQLAlchemy==2.4.4
 
 USER airflow
 WORKDIR ${AIRFLOW_USER_HOME}
